@@ -1,6 +1,6 @@
-const VERSION='3.8';
-const CACHE=`applus-${VERSION}-reward-cards-system`;
-const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
+const VERSION='3.9';
+const CACHE=`applus-${VERSION}-page-help-system`;
+const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
