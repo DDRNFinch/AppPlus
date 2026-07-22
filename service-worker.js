@@ -1,5 +1,5 @@
 const VERSION='2.5';
-const CACHE=`applus-${VERSION}-course-layout`;
+const CACHE=`applus-${VERSION}-practical-mark-sheets`;
 const CORE=['./','index.html','app.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
