@@ -1,22 +1,23 @@
 (function(){
   const original=window.buildAdvancedAcademyQuestions;
   const stems=[
-    'Which action best applies this principle before work starts?',
-    'What should a learner do if this issue is found during the task?',
-    'Which statement shows the safest practical understanding?',
-    'During a workplace check, which response is correct?',
-    'Which control should be included in the planned system of work?',
-    'A condition changes during work. Which response remains correct?',
-    'Which point should be confirmed during the task briefing?',
-    'What evidence would show this requirement is being followed?',
-    'Which decision best protects the worker and others?',
-    'At the end of the task, which conclusion is correct?'
+    s=>`Before ${s}, which action should be included in the plan?`,
+    s=>`A problem is identified during ${s}. What is the correct response?`,
+    s=>`Which statement would demonstrate safe understanding when reviewing ${s}?`,
+    s=>`During an inspection of ${s}, which finding should be accepted as correct?`,
+    s=>`Which control is most appropriate for ${s}?`,
+    s=>`Conditions change while carrying out ${s}. What should happen next?`,
+    s=>`What must be confirmed in the briefing for ${s}?`,
+    s=>`Which evidence best shows that ${s} is being managed correctly?`,
+    s=>`Which decision best protects everyone involved in ${s}?`,
+    s=>`After ${s}, which conclusion is accurate?`
   ];
+  const situations=['starting a new shift','preparing a shared work area','checking unfamiliar equipment','responding to a reported defect','briefing a new team member','reviewing a changed task','working near other people','receiving a new material','checking emergency arrangements','closing the work area','planning a short-duration activity','reviewing a near miss','checking stored equipment','supervising a visitor','responding to poor weather','moving work to another area','checking a contractor’s controls','restarting after an interruption','reviewing a written assessment','handing work to the next team','dealing with damaged protection','checking a restricted area','planning work outside normal hours','responding to an alarm','reviewing exposure controls','checking welfare arrangements','coordinating two teams','recording a workplace concern','verifying a completed check','authorising work to begin'];
   window.buildAdvancedAcademyQuestions=function(test){
     const base=original(test);
     if(!test.id.startsWith('cscs-')&&test.section!=='inhouse')return base;
     const total=test.id==='cscs-hard'?30:test.id==='cscs-medium'?20:10,pool=window.ADVANCED_DISTRACTORS[test.id]||window.ADVANCED_DISTRACTORS['cscs-hard'];
-    return Array.from({length:total},(_,i)=>{const fact=test.facts[i%test.facts.length],answer=(i*3+1)%4,wrong=[pool[(i+1)%pool.length],pool[(i+3)%pool.length],pool[(i+4)%pool.length]],options=[...wrong];options.splice(answer,0,fact);return {q:stems[i%stems.length],options,answer}});
+    return Array.from({length:total},(_,i)=>{const fact=test.facts[i%test.facts.length],answer=(i*3+1)%4,situation=situations[i],wrong=[pool[(i+1)%pool.length],pool[(i+3)%pool.length],pool[(i+4)%pool.length]],options=wrong.map((x,n)=>`For ${situation}, ${x.charAt(0).toLowerCase()+x.slice(1)}${n===0?'':n===1?' This would be recorded as the final control.':' No further review would be needed.'}`);options.splice(answer,0,`For ${situation}, ${fact.charAt(0).toLowerCase()+fact.slice(1)} This should be checked and recorded.`);return {q:stems[i%stems.length](situation),options,answer}});
   };
   const guidance={
     'ih-ppe':['PPE is the last line of defence, so first remove or reduce the hazard using higher-level controls.','Match protection to the hazard, exposure route, duration and manufacturer information.','Tight-fitting masks only work when the exact make, model and size has passed a face-fit test.','Inspect PPE before use; damaged, contaminated or poorly fitting equipment must not be used.','Store, clean, maintain and replace PPE exactly as instructed.'],
