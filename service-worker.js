@@ -1,6 +1,6 @@
-const VERSION='5.2';
-const CACHE=`applus-${VERSION}-detailed-page-guides`;
-const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
+const VERSION='5.3';
+const CACHE=`applus-${VERSION}-epa-practice`;
+const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','epa.css','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','epa.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
