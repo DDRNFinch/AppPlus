@@ -1,5 +1,5 @@
-const VERSION='2.7';
-const CACHE=`applus-${VERSION}-brick-practical-names`;
+const VERSION='2.8';
+const CACHE=`applus-${VERSION}-carpentry-practical-tasks`;
 const CORE=['./','index.html','app.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
