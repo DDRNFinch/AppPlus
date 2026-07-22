@@ -5,7 +5,7 @@ const hadSavedState=localStorage.getItem('applus-state')!==null;
 let state=store.get('applus-state',{name:'Apprentice',signature:'',courseId:'brick',completed:{},drafts:{},rewards:[],claimedRewards:{},claimedThemes:{},selectedTheme:'default',academyPassed:{},academyScores:{},academyCompletionDates:{},academyTestPassed:{},academyTestScores:{},witnessTestimonies:{},practicalAssessments:{},tab:'home'});
 state.signature=state.signature||''; state.academyPassed=state.academyPassed||{}; state.academyScores=state.academyScores||{}; state.academyCompletionDates=state.academyCompletionDates||{}; state.academyTestPassed=state.academyTestPassed||{};state.academyTestScores=state.academyTestScores||{};state.witnessTestimonies=state.witnessTestimonies||{}; state.practicalAssessments=state.practicalAssessments||{};state.claimedRewards=state.claimedRewards||{};state.claimedThemes=state.claimedThemes||{};state.selectedTheme=state.selectedTheme||'default';state.courseLocked=state.courseLocked??hadSavedState;state.notifications={all:true,updates:true,rewards:true,encouragement:true,badges:true,pageHelp:true,...(state.notifications||{})};state.rewardOverrides=state.rewardOverrides||{};state.badgeOverrides=state.badgeOverrides||{};state.mateSaved=state.mateSaved||[];
 let view={tab:state.tab||'home',courseId:state.courseId||'brick',assignment:null,academyModule:null,academyTest:null,academySection:null,witnessAssignment:null,practicalAssessment:null,rewardApp:null,rewardsPage:null,apprenticeshipTab:state.apprenticeshipTab||'assignments'};
-const APP_VERSION='4.5';
+const APP_VERSION='4.6';
 let deferredInstallPrompt=null;
 let swRegistration=null;
 let refreshingForUpdate=false;
@@ -141,7 +141,7 @@ function generalAcademyTests(){return [
   {id:'ih-prevent',section:'inhouse',title:'Prevent and British Values',xp:100,facts:['Prevent aims to safeguard people from radicalisation.','Concerns should be passed to the appropriate safeguarding lead.','British Values include democracy and the rule of law.','Mutual respect and tolerance support an inclusive society.','Online influence can form part of a radicalisation concern.']},
   {id:'ih-environment',section:'inhouse',title:'Environmental Awareness',xp:100,facts:['Waste should be reduced before considering disposal.','Materials should be segregated for reuse and recycling.','Drains and soil must be protected from contamination.','Efficient planning can reduce material waste.','Hazardous waste requires the correct storage and disposal route.']}
 ]}
-function generalTestQuestions(test){const wrong=['The requirement can be ignored when work is urgent.','Only the supervisor needs to understand this.','No check or control is required.'];return test.facts.map((fact,i)=>{const answer=i%4,options=[...wrong];options.splice(answer,0,fact);return {q:`Which statement about ${test.title} is correct?`,options,answer}})}
+function generalTestQuestions(test){if(window.buildAdvancedAcademyQuestions)return window.buildAdvancedAcademyQuestions(test);const wrong=['The requirement can be ignored when work is urgent.','Only the supervisor needs to understand this.','No check or control is required.'];return test.facts.map((fact,i)=>{const answer=i%4,options=[...wrong];options.splice(answer,0,fact);return {q:`Which statement about ${test.title} is correct?`,options,answer}})}
 function renderAcademy(){
   const c=course();
   if(view.academySection&&!['functional','cscs','inhouse'].includes(view.academySection))view.academySection=null;
