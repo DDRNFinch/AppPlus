@@ -4,7 +4,7 @@ const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{re
 let state=store.get('applus-state',{name:'Apprentice',signature:'',courseId:'brick',xp:0,completed:{},drafts:{},rewards:[],academyPassed:{},academyScores:{},academyCompletionDates:{},witnessTestimonies:{},practicalAssessments:{},tab:'home'});
 state.signature=state.signature||''; state.academyPassed=state.academyPassed||{}; state.academyScores=state.academyScores||{}; state.academyCompletionDates=state.academyCompletionDates||{}; state.witnessTestimonies=state.witnessTestimonies||{}; state.practicalAssessments=state.practicalAssessments||{};
 let view={tab:state.tab||'home',courseId:state.courseId||'brick',assignment:null,academyModule:null,academySection:null,witnessAssignment:null,practicalAssessment:null,apprenticeshipTab:state.apprenticeshipTab||'assignments'};
-const APP_VERSION='2.5';
+const APP_VERSION='2.7';
 let deferredInstallPrompt=null;
 let swRegistration=null;
 let refreshingForUpdate=false;
@@ -79,7 +79,7 @@ function ksbMatrix(c){
 function witnessKey(number){return `${view.courseId}-WT${number}`}
 function practicalSkills(a){return (a.ksbs||[]).filter(x=>ksbCode(x).startsWith('S')).map(x=>({code:ksbCode(x),description:String(x).replace(/^S\d+\s*:\s*/i,'').trim()}))}
 function practicalTask(c,a){
-  const brick=['Build a straight half-brick wall to the supplied dimensions.','Build a straight wall incorporating a return corner.','Build a solid one-brick wall to the supplied drawing.','Build a cavity wall with correct wall ties and insulation.','Build a wall containing a door or window opening.','Build a freestanding brick pier to the specified size and height.','Build a wall with an attached pier and maintain the bond.','Build a wall finished with a brick-on-edge coping.','Build a wall incorporating a soldier course.','Build a decorative brickwork panel using the specified bond.','Build a cavity wall incorporating DPC, insulation and an opening.','Complete an integrated brickwork task containing walling, a corner and a pier.'];
+  const brick=['Build a straight half-brick wall to the supplied dimensions.','Build a straight wall incorporating a return corner.','Build a solid one-brick wall to the supplied drawing.','Build a cavity wall with correct wall ties and insulation.','Build a wall containing a door or window opening.','Set out and build a cavity wall with a window, lintel and soldiers.','Build a wall with an attached pier and maintain the bond.','Build a wall finished with a brick-on-edge coping.','Build a wall and then accurately remove and repair five damaged bricks.','Build a decorative brickwork panel using the specified bond.','Build a cavity wall incorporating DPC, insulation and an opening.','Build a gable end with a corbel and accurate raked cuts.'];
   if(c.id==='brick')return brick[(a.number-1)%brick.length];
   const lead=c.id.includes('bench')?'Manufacture':c.id.includes('site')?'Install':'Complete';
   return `${lead} a practical ${a.title.toLowerCase()} task to the supplied drawing, specification and tolerances.`;
