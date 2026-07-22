@@ -1,1 +1,1 @@
-{"version":"4.0","build":"4.0"}
+{"version":"4.2","build":"4.2","whatsNew":["Simplified Developer Mode reward, theme and badge overrides.","A tick now means the item is manually unlocked.","No tick returns the item to its normal automatic unlock rules.","Unlock All now ticks every item in the selected section before Save overrides is pressed.","The What’s New update tab continues to explain every new release before download."]}
