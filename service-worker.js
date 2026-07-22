@@ -1,5 +1,5 @@
-const VERSION='3.2';
-const CACHE=`applus-${VERSION}-xp-badges`;
+const VERSION='3.3';
+const CACHE=`applus-${VERSION}-rewards-tile`;
 const CORE=['./','index.html','app.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
