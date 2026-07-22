@@ -1,6 +1,6 @@
-const VERSION='4.3';
-const CACHE=`applus-${VERSION}-reward-app-launcher`;
-const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
+const VERSION='4.4';
+const CACHE=`applus-${VERSION}-badge-theme-reconcile`;
+const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
