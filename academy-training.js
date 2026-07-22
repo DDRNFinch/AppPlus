@@ -14,8 +14,8 @@
   ];
   window.buildAdvancedAcademyQuestions=function(test){
     const base=original(test);
-    if(test.id!=='cscs-hard'&&test.section!=='inhouse')return base;
-    const total=test.id==='cscs-hard'?20:10,pool=window.ADVANCED_DISTRACTORS[test.id]||window.ADVANCED_DISTRACTORS['cscs-hard'];
+    if(!test.id.startsWith('cscs-')&&test.section!=='inhouse')return base;
+    const total=test.id==='cscs-hard'?30:test.id==='cscs-medium'?20:10,pool=window.ADVANCED_DISTRACTORS[test.id]||window.ADVANCED_DISTRACTORS['cscs-hard'];
     return Array.from({length:total},(_,i)=>{const fact=test.facts[i%test.facts.length],answer=(i*3+1)%4,wrong=[pool[(i+1)%pool.length],pool[(i+3)%pool.length],pool[(i+4)%pool.length]],options=[...wrong];options.splice(answer,0,fact);return {q:stems[i%stems.length],options,answer}});
   };
   const guidance={
