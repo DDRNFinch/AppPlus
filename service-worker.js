@@ -1,5 +1,5 @@
-const VERSION='3.0';
-const CACHE=`applus-${VERSION}-course-card-cleanup`;
+const VERSION='3.1';
+const CACHE=`applus-${VERSION}-home-progress`;
 const CORE=['./','index.html','app.css','app.js','courses.js','academy-questions.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
