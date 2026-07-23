@@ -1,6 +1,6 @@
-const VERSION='V1.5';
-const CACHE=`applus-${VERSION}-guided-demo`;
-const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','epa.css','revision-packs.css','documents-compact.css','brick-plans.css','accessibility.css','learner-notes.css','guided-demo.css','brick-plans.js','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','epa.js','revision-packs.js','trade-revision.js','accessibility.js','learner-notes.js','guided-demo.js','english-bond-reference.jpg','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
+const VERSION='V1.8';
+const CACHE=`applus-${VERSION}-expanded-demo-share`;
+const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','epa.css','revision-packs.css','documents-compact.css','brick-plans.css','accessibility.css','learner-notes.css','guided-demo.css','brick-plans.js','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','epa.js','revision-packs.js','trade-revision.js','accessibility.js','learner-notes.js','guided-demo.js','english-bond-reference.jpg','apprentice-plus-qr.png','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
