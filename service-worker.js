@@ -1,6 +1,6 @@
-const VERSION='5.7';
-const CACHE=`applus-${VERSION}-resumable-tests`;
-const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','epa.css','revision-packs.css','documents-compact.css','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','epa.js','revision-packs.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
+const VERSION='5.8';
+const CACHE=`applus-${VERSION}-trade-revision`;
+const CORE=['./','index.html','app.css','rewards.css','developer.css','notifications.css','cards.css','page-help.css','my-cards.css','whats-new.css','simple-overrides.css','reward-apps.css','badge-celebration.css','badge-fix.css','mate-v2.css','academy-challenge.css','explosive-badges.css','quiz-slides.css','academy-training.css','epa.css','revision-packs.css','documents-compact.css','app.js','courses.js','academy-questions.js','advanced-academy.js','functional-skills-20.js','academy-training.js','epa.js','revision-packs.js','trade-revision.js','manifest.json','version.json','logo.png','icon-192.png','icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)));
@@ -30,7 +30,7 @@ self.addEventListener('fetch',event=>{
     return;
   }
 
-  const networkFirst=['app.js','app.css','courses.js','academy-questions.js','manifest.json','version.json','service-worker.js','index.html'];
+  const networkFirst=['app.js','app.css','courses.js','academy-questions.js','epa.js','epa.css','revision-packs.js','revision-packs.css','trade-revision.js','manifest.json','version.json','service-worker.js','index.html'];
   if(networkFirst.some(name=>url.pathname.endsWith(name))){
     event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{
       if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy))}
