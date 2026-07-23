@@ -5,7 +5,7 @@
     const end='</div>';
     const screens={
       welcome:`<div class="demo-welcome"><img src="logo.png"><b>Apprentice+</b><span>Your Course, Your Way</span></div>`,
-      navigation:`<div class="demo-mini-header">Apprentice+</div><div class="demo-placeholder tall">Your current page</div>${nav}`,
+      navigation:`<div class="demo-mini-header">Apprentice+</div><div class="demo-placeholder tall">Your current page</div>${focus==='nav'?nav.replace('demo-nav','demo-nav demo-focus'):nav}`,
       home:`<div class="demo-mini-header">Home</div>${H('progress')}<div class="demo-tile"><small>COURSE PROGRESS</small><b>27%</b><div class="demo-bar"><i></i></div></div>${end}${H('next')}<div class="demo-next"><small>WHAT SHOULD I DO NEXT?</small><b>Complete Assignment 4</b><button>Open assignment</button></div>${end}<div class="demo-row"><div>XP & badges</div><div>Rewards</div></div>${nav}`,
       learning:`<div class="demo-mini-header">Learning</div>${['Revision Packs','Functional Skills','CSCS','In-house Training','Learner Notepad'].map((x,i)=>`${H(`learn${i}`)}<div class="demo-list-row"><span>${['📚','∑','⛑','★','✎'][i]}</span><b>${x}</b><i>›</i></div>${end}`).join('')}${nav}`,
       course:`<div class="demo-mini-header">Course</div><div class="demo-course-tabs">${H('as')}<button class="as">Assignments<b>AS</b></button>${end}<div class="support"><small>SUPPORTING EVIDENCE</small>${['TA','PA','WT','EPA'].map(x=>`${H(x.toLowerCase())}<button>${x}</button>${end}`).join('')}</div></div><div class="demo-workflow">Assignment › TA, PA or WT › Upload ✓</div>${nav}`,
@@ -20,11 +20,11 @@
       settings:`<div class="demo-mini-header">Settings</div>${['Learner Profile','Reading & Notifications','App & Updates','Developer Mode'].map((x,i)=>`${H(`setting${i}`)}<div class="demo-list-row"><b>${x}</b><i>＋</i></div>${end}`).join('')}${nav}`,
       recap:`<div class="demo-recap"><b>Your evidence journey</b><span>1　Complete Assignment (AS)</span><i>↓</i><span>2　Add TA, PA or WT</span><i>↓</i><span>3　Download evidence</span><i>↓</i><span>4　Upload to your portfolio</span><i>↓</i><span>5　Tap Uploaded ✓</span></div>`,
       disclaimer:`<div class="demo-disclaimer"><b>Protect and submit your work</b><p>Apprentice+ stores its data and evidence locally on this device. Work completed inside the app is not automatically submitted to your college, provider, employer or online portfolio.</p><p>You must download completed evidence and upload it to the online portfolio specified by your provider. Keep backups and do not clear the app’s data before your evidence is safely uploaded.</p><label><input id="demoDisclaimerCheck" type="checkbox"> I understand that my evidence is stored locally and must be uploaded.</label></div>`
-    };return `<div class="demo-phone">${screens[type]||screens.home}</div>`;
+    };return `<div class="demo-phone ${focus?'demo-has-focus':''}">${screens[type]||screens.home}</div>`;
   };
   const full=[
     ['welcome','','Welcome to Apprentice+','This demonstration shows you how to complete assignments, add supporting evidence and prepare files for your online portfolio.'],
-    ['navigation','','The bottom navigation','These six buttons take you to every main area of Apprentice+. We will look at each one first.'],
+    ['navigation','nav','The bottom navigation','These six buttons take you to every main area of Apprentice+. We will look at each one first.'],
     ['home','progress','Home','Home shows assignment progress, the next recommended action, XP, badges, rewards and unlocked Mate tools.'],
     ['learning','','Learning','Learning contains revision packs, Functional Skills, CSCS preparation, in-house training and the Learner Notepad.'],
     ['course','','Course','Course contains primary Assignments, supporting TA, PA and WT evidence, plus EPA practice.'],
@@ -87,7 +87,18 @@
   }
   function run(slides,isFull=false){
     let index=0;const wrap=document.createElement('div');wrap.className='guided-demo-overlay';document.body.appendChild(wrap);
-    const paint=()=>{const [type,focus,title,text]=slides[index],last=index===slides.length-1;wrap.innerHTML=`<div class="guided-demo-shell"><div class="demo-top"><b>${isFull?'APPRENTICE+ GUIDED DEMO':'PAGE DEMO'}</b><button id="exitGuidedDemo">×</button></div><div class="demo-progress"><i style="width:${(index+1)/slides.length*100}%"></i></div><div class="demo-stage">${screen(type,focus)}<div class="demo-speech"><small>${index+1} OF ${slides.length}</small><h2>${title}</h2><p>${text}</p></div></div><div class="demo-controls"><button id="demoBack" ${index===0?'disabled':''}>‹ Back</button><button id="demoNext" ${last&&type==='disclaimer'?'disabled':''}>${last?'Finish':'Next ›'}</button></div></div>`;$('#exitGuidedDemo',wrap).onclick=()=>wrap.remove();$('#demoBack',wrap).onclick=()=>{index--;paint()};const next=$('#demoNext',wrap);if(type==='disclaimer'){$('#demoDisclaimerCheck',wrap).onchange=e=>next.disabled=!e.target.checked}next.onclick=()=>{if(last){if(isFull){state.demoCompleted=true;state.demoDisclaimerAccepted=true;save()}wrap.remove();if(isFull)toast('Demo completed')}else{index++;paint()}}};
+    const pointArrow=()=>{
+      const stage=$('.demo-stage',wrap),speech=$('.demo-speech',wrap),target=$('.demo-focus',wrap),svg=$('.demo-pointer',wrap);
+      if(!stage||!speech||!target||!svg){if(svg)svg.hidden=true;return}
+      const sr=stage.getBoundingClientRect(),br=speech.getBoundingClientRect(),tr=target.getBoundingClientRect(),w=sr.width,h=sr.height;
+      const sx=br.left-sr.left+Math.min(br.width*.32,125),sy=br.top-sr.top+2,ex=tr.left-sr.left+tr.width*.5,ey=tr.bottom-sr.top+5,bend=ex<sx?-48:48;
+      svg.hidden=false;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+      const d=`M ${sx} ${sy} C ${sx+bend} ${sy-35}, ${ex-bend*.55} ${ey+55}, ${ex} ${ey}`;
+      $('.demo-arrow-line',svg).setAttribute('d',d);$('.demo-arrow-sketch',svg).setAttribute('d',`M ${sx+2} ${sy+1} C ${sx+bend+4} ${sy-31}, ${ex-bend*.5} ${ey+51}, ${ex+1} ${ey+1}`);
+      $('.demo-arrow-head-left',svg).setAttribute('d',`M ${ex-13} ${ey+17} Q ${ex-5} ${ey+8} ${ex} ${ey}`);
+      $('.demo-arrow-head-right',svg).setAttribute('d',`M ${ex+13} ${ey+17} Q ${ex+5} ${ey+8} ${ex} ${ey}`);
+    };
+    const paint=()=>{const [type,focus,title,text]=slides[index],last=index===slides.length-1;wrap.innerHTML=`<div class="guided-demo-shell"><div class="demo-top"><b>${isFull?'APPRENTICE+ GUIDED DEMO':'PAGE DEMO'}</b><button id="exitGuidedDemo">×</button></div><div class="demo-progress"><i style="width:${(index+1)/slides.length*100}%"></i></div><div class="demo-stage">${screen(type,focus)}<svg class="demo-pointer" aria-hidden="true"><path class="demo-arrow-sketch"></path><path class="demo-arrow-line"></path><path class="demo-arrow-head-left"></path><path class="demo-arrow-head-right"></path></svg><div class="demo-speech"><small>${index+1} OF ${slides.length}</small><h2>${title}</h2><p>${text}</p></div></div><div class="demo-controls"><button id="demoBack" ${index===0?'disabled':''}>‹ Back</button><button id="demoNext" ${last&&type==='disclaimer'?'disabled':''}>${last?'Finish':'Next ›'}</button></div></div>`;$('#exitGuidedDemo',wrap).onclick=()=>wrap.remove();$('#demoBack',wrap).onclick=()=>{index--;paint()};const next=$('#demoNext',wrap);if(type==='disclaimer'){$('#demoDisclaimerCheck',wrap).onchange=e=>next.disabled=!e.target.checked}next.onclick=()=>{if(last){if(isFull){state.demoCompleted=true;state.demoDisclaimerAccepted=true;save()}wrap.remove();if(isFull)toast('Demo completed')}else{index++;paint()}};requestAnimationFrame(pointArrow)};
     paint();
   }
   window.openFullAppDemo=()=>run(detailedSlides(full),true);
