@@ -68,14 +68,15 @@
     const trade=tradeDetails[c.id]||{name:c.name.toLowerCase(),work:'course-specific work',checks:'accuracy, quality, safety and finish'};
     const ksbs=(a.ksbs||[]).filter(Boolean),skills=(a.skills||ksbs.filter(x=>/^S\d+/i.test(x))),knowledge=(a.knowledge||ksbs.filter(x=>/^K\d+/i.test(x))),behaviours=(a.behaviours||ksbs.filter(x=>/^B\d+/i.test(x)));
     const pool=ksbs.length?ksbs:[`${a.title}: complete the work safely, accurately and to the specified quality`];
+    const sourceQuestions=assignmentQuestionsFor(c,a);
     const topics=themes.map(([title,focus],i)=>{
       const primary=pool[i%pool.length],secondary=pool[(i+1)%pool.length],skill=skills[i%Math.max(1,skills.length)]||primary,know=knowledge[i%Math.max(1,knowledge.length)]||secondary,behaviour=behaviours[i%Math.max(1,behaviours.length)]||'Take responsibility, communicate professionally and seek guidance when required.';
+      const source=sourceQuestions[i%sourceQuestions.length],correct=source.options[source.answer];
       const label=`${title}: ${code(primary)}`;
-      const learn=`For ${a.title}, this topic covers ${focus}. The key requirement is ${shortened(primary,150)} Apply it to ${trade.work}. Competent work follows the current specification, manufacturer guidance, site rules and safe system of work—not an unapproved shortcut.`;
+      const learn=`For ${a.title}, this topic covers ${focus}. The assignment question tests this principle: ${correct} Apply it to ${trade.work} using the current specification, manufacturer guidance and safe system of work.`;
       const method=`Confirm the result, information, sequence, resources, controls and inspection points. Apply ${shortened(know,90)} Demonstrate ${shortened(skill,90)} Check each stage against the drawing or specification, including ${trade.checks}. Pause for an authorised decision if information conflicts or the task exceeds your authority.`;
       const example=`During ${a.title.toLowerCase()}, a condition, material, measurement or instruction differs from the plan. Protect the area, verify the difference, consider safety and performance, then report the facts. Record the authorised response before continuing and re-check the affected stage. Evidence should show key stages, measurements, decisions and the final result. This supports ${shortened(behaviour,80)}`;
-      const check=checks[i],answer=(a.number+i)%4,options=[...check.wrong];options.splice(answer,0,check.correct);
-      return {title:label,learn,method,example,q:check.question(a,trade),options,answer};
+      return {title:label,learn,method,example,q:source.q,options:[...source.options],answer:source.answer,ksb:source.ksb};
     });
     return {title:`AS${a.number}: ${a.title}`,subject:`${c.name.toUpperCase()} · ASSIGNMENT ${a.number}`,courseId:c.id,assignment:a.number,topics};
   }
@@ -91,9 +92,11 @@
   }
   window.renderRevisionOverview=function(){
     const c=course();
+    const packStatus=id=>state.revisionProgress[id]?.completed?'Completed':state.quizProgress[`revision:${id}`]?'In progress':'Not started';
     shell('Revision Packs',`<button class="back" id="backRevisionFolders">‹ Back to Academy</button><div class="revision-hero"><span>APPRENTICE+ REVISION LIBRARY</span><h2>Revision Packs</h2><p>Guided Functional Skills and assignment-by-assignment trade revision. Every pack uses 30 teaching slides and 10 knowledge checks.</p></div><div class="revision-library-label"><b>${esc(c.name.toUpperCase())} ASSIGNMENT PACKS</b><span>${c.assignments.length} packs</span></div><div class="revision-pack-grid trade-revision-grid">${c.assignments.map(a=>`<button class="revision-pack-card trade-pack-card" data-revision-pack="trade:${c.id}:${a.number}"><span>TRADE REVISION · AS${a.number}</span><h3>${esc(a.title)}</h3><p>30 detailed slides · 10 questions · ${a.ksbs.length} KSBs</p><b>Open pack ›</b></button>`).join('')}</div><div class="revision-library-label"><b>FUNCTIONAL SKILLS</b><span>4 packs</span></div><div class="revision-pack-grid">${Object.entries(functional).map(([id,p])=>`<button class="revision-pack-card" data-revision-pack="${id}"><span>FUNCTIONAL SKILLS</span><h3>${esc(p.title)}</h3><p>30 teaching slides · 10 questions</p><b>Open pack ›</b></button>`).join('')}</div>`);
     $('#backRevisionFolders').onclick=()=>{view.academySection=null;render()};
     $$('[data-revision-pack]').forEach(b=>b.onclick=()=>openPack(b.dataset.revisionPack));
+    $$('[data-revision-pack]').forEach(b=>{const id=b.dataset.revisionPack,p=b.querySelector('p');if(p)p.insertAdjacentHTML('afterend',`<em class="activity-status">${packStatus(id)}</em>`)});
   };
   window.renderRevisionPack=function(){
     const p=selectedPack(view.revisionPack);if(!p){view.revisionPack=null;return renderAcademy()}
