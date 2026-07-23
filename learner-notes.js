@@ -1,0 +1,25 @@
+(function(){
+  const notes=()=>state.learnerNotes=state.learnerNotes||[];
+  const dateText=value=>new Date(value||Date.now()).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  function noteById(id){return notes().find(x=>String(x.id)===String(id))}
+  function saveEditorNote(){
+    const title=$('#learnerNoteTitle')?.value.trim()||'',text=$('#learnerNoteText')?.value.trim()||'',existing=noteById(view.learnerNote),images=existing?.images||[];
+    if(!title&&!text&&!images.length)return null;
+    const now=new Date().toISOString(),note=existing||{id:String(Date.now()),created:now,images:[]};note.title=title||'Untitled note';note.text=text;note.updated=now;if(!existing)notes().unshift(note);view.learnerNote=note.id;save();return note;
+  }
+  window.renderLearnerNotepad=function(){
+    const list=notes();
+    shell('Learner Notepad',`<button class="back" id="backFromNotepad">‹ Back to Documents</button><div class="notepad-hero"><span>LEARNER NOTEPAD</span><h2>Notes and images</h2><p>Keep course reminders, job information, sketches, measurements and photographs together.</p><button class="btn btn-primary" id="createLearnerNote">＋ New note</button></div><div class="learner-note-list">${list.length?list.map(n=>`<button class="learner-note-card" data-open-note="${n.id}"><div class="note-card-icon">${n.images?.length?'▧':'✎'}</div><div><h3>${esc(n.title||'Untitled note')}</h3><p>${esc((n.text||'No written text').slice(0,100))}${(n.text||'').length>100?'…':''}</p><small>${dateText(n.updated)} · ${n.images?.length||0} image${n.images?.length===1?'':'s'}</small></div><span>›</span></button>`).join(''):'<div class="card empty notepad-empty"><b>No notes saved yet</b><p>Create a note to save text and photographs for later.</p></div>'}</div>`);
+    $('#backFromNotepad').onclick=()=>{view.notepad=false;view.learnerNote=null;render()};$('#createLearnerNote').onclick=()=>{view.learnerNote='new';renderLearnerNoteEditor()};$$('[data-open-note]').forEach(b=>b.onclick=()=>{view.learnerNote=b.dataset.openNote;renderLearnerNoteEditor()});
+  };
+  window.renderLearnerNoteEditor=function(){
+    let note=view.learnerNote==='new'?null:noteById(view.learnerNote);if(view.learnerNote!=='new'&&!note){view.learnerNote=null;return renderLearnerNotepad()}const images=note?.images||[];
+    shell(note?'Edit Note':'New Note',`<button class="back" id="backFromNoteEditor">‹ Back to Notepad</button><div class="card learner-note-editor"><label>Note title<input id="learnerNoteTitle" type="text" maxlength="100" placeholder="e.g. Cavity wall measurements" value="${esc(note?.title||'')}"></label><label>Your notes<textarea id="learnerNoteText" spellcheck="true" autocorrect="on" autocapitalize="sentences" placeholder="Type or dictate your notes here…">${esc(note?.text||'')}</textarea></label><div class="note-image-heading"><div><b>Images</b><small>Add up to 6 photographs or reference images.</small></div><button type="button" id="addNoteImage" ${images.length>=6?'disabled':''}>＋ Add image</button></div><div class="note-image-grid">${images.map((src,i)=>`<figure><img src="${src}" alt="Note image ${i+1}"><button type="button" data-remove-note-image="${i}" aria-label="Remove image">×</button></figure>`).join('')}${images.length? '':'<div class="note-image-placeholder">No images added</div>'}</div><div class="note-editor-actions"><button class="btn btn-primary" id="saveLearnerNote">Save note</button>${note?'<button class="btn btn-danger" id="deleteLearnerNote">Delete note</button>':''}</div><p class="muted note-save-date">${note?`Last saved ${dateText(note.updated)}`:'The note is stored on this device when saved.'}</p></div>`);
+    const ensureDraft=()=>{if(!note){note={id:String(Date.now()),title:'',text:'',images:[],created:new Date().toISOString(),updated:new Date().toISOString()};notes().unshift(note);view.learnerNote=note.id}note.title=$('#learnerNoteTitle').value;note.text=$('#learnerNoteText').value;return note};
+    $('#backFromNoteEditor').onclick=()=>{saveEditorNote();view.learnerNote=null;renderLearnerNotepad()};$('#saveLearnerNote').onclick=()=>{const saved=saveEditorNote();if(!saved)return toast('Add a title, note or image first');toast('Note saved');renderLearnerNoteEditor()};
+    $('#addNoteImage').onclick=()=>openPhotoChooser(images.length,src=>{const draft=ensureDraft();draft.images.push(src);draft.updated=new Date().toISOString();save();renderLearnerNoteEditor()},'Add a useful course, job, measurement or reference image.','Add note image');
+    $$('[data-remove-note-image]').forEach(b=>b.onclick=()=>{const draft=ensureDraft();draft.images.splice(Number(b.dataset.removeNoteImage),1);draft.updated=new Date().toISOString();save();renderLearnerNoteEditor()});
+    if($('#deleteLearnerNote'))$('#deleteLearnerNote').onclick=()=>{if(confirm('Delete this note and all of its saved images?')){state.learnerNotes=notes().filter(x=>x.id!==note.id);save();view.learnerNote=null;toast('Note deleted');renderLearnerNotepad()}};
+    if(window.applyAccessibilitySupport)applyAccessibilitySupport();
+  };
+})();
