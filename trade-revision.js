@@ -15,7 +15,8 @@
   const tradeDetails={
     brick:{name:'bricklaying',work:'masonry, mortar, walling and associated components',checks:'gauge, line, level, plumb, square, bond, joint finish and dimensional tolerance'},
     site:{name:'site carpentry',work:'timber components, structural fixings, first-fix and second-fix installation',checks:'datum, line, level, plumb, square, fit, fixing, tolerance and finish'},
-    bench:{name:'architectural joinery',work:'timber selection, setting-out rods, machining, joints, assembly and finishing',checks:'size, square, twist, joint fit, profile continuity, surface quality and tolerance'}
+    bench:{name:'architectural joinery',work:'timber selection, setting-out rods, machining, joints, assembly and finishing',checks:'size, square, twist, joint fit, profile continuity, surface quality and tolerance'},
+    pmo:{name:'property maintenance',work:'planned and responsive diagnosis, safe isolation, multi-trade repair, occupant protection, records and customer handover',checks:'safe isolation, specification, compatibility, dimensions, operation, leakage, security, finish, reinstatement and accurate reporting'}
   };
   const strip=s=>String(s||'').replace(/^[KSB]\d+\s*:\s*/i,'').replace(/\s+/g,' ').trim();
   const code=s=>(String(s||'').match(/^[KSB]\d+/i)||['KSB'])[0].toUpperCase();
